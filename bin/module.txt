@@ -1,0 +1,2 @@
+name:milkAdminStart
+main:com.bukkit.sharkiller.milkAdminRTK.MilkAdminRTK
