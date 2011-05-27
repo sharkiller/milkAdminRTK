@@ -201,13 +201,20 @@ public class WebServer extends Thread {
 	        } else {
 	            BufferedReader in = new BufferedReader(new InputStreamReader(WebServerSocket.getInputStream()));
 	            try{
-	                String l, g, json;
+	                String l, g, url="", param="", json;
 	                while ( (l = in.readLine()).length() > 0 ){
 	                    if ( l.startsWith("GET") ){
 	                        g = (l.split(" "))[1];
-	                        if ( g.startsWith("/server/login") ){
-	                        	String username = getParam("username", g);
-								String password = getParam("password", g);
+	                        Pattern regex = Pattern.compile("([^\\?]*)([^#]*)");
+							Matcher result = regex.matcher(g);
+							if(result.find()){
+								url = result.group(1);
+								param = result.group(2);
+							}
+							
+	                        if ( url.startsWith("/server/login") ){
+	                        	String username = getParam("username", param);
+								String password = getParam("password", param);
 	                        	if(username.length() > 0 && password.length() > 0){
 									if(adminList.containsKey(username)){
 										String login = adminList.getString(username, password);
@@ -227,14 +234,14 @@ public class WebServer extends Thread {
 								print(json, "text/plain");
 							}
 	                        else if (!noSaveLoggedIn.containsKey(WebServerSocket.getInetAddress().getCanonicalHostName()) || !noSaveLoggedIn.containsKey(WebServerSocket.getInetAddress().getHostAddress())){
-	                        	if( g.equals("/")){
+	                        	if( url.equals("/")){
 									readFileAsBinary("./milkAdmin/html/login.html");
 								}
-								else if( g.equals("/invalidlogin.html")){
+								else if( url.equals("/invalidlogin.html")){
 									readFileAsBinary("./milkAdmin/html/invalidlogin.html");
 								}
-								else if( g.startsWith("/images/") || g.startsWith("/js/") || g.startsWith("/css/")){
-									readFileAsBinary("./milkAdmin/html" + g);
+								else if( url.startsWith("/images/") || url.startsWith("/js/") || url.startsWith("/css/")){
+									readFileAsBinary("./milkAdmin/html" + url);
 								}
 	                            //OTHERWISE LOAD PAGES
 	                            else{
@@ -243,15 +250,15 @@ public class WebServer extends Thread {
 	                            }
 	                        }else{
 	                        	if(adminList.containsKey("admin")){
-	                        		if( g.equals("/register.html")){
+	                        		if( url.equals("/register.html")){
 										readFileAsBinary("./milkAdmin/html/register.html");
 									}
-	                        		else if( g.startsWith("/images/") || g.startsWith("/js/") || g.startsWith("/css/")){
-										readFileAsBinary("./milkAdmin/html" + g);
+	                        		else if( url.startsWith("/images/") || url.startsWith("/js/") || url.startsWith("/css/")){
+										readFileAsBinary("./milkAdmin/html" + url);
 									}
-									else if ( g.startsWith("/server/account_create") ){
-										String username = getParam("username", g);
-										String password = getParam("password", g);
+									else if ( url.startsWith("/server/account_create") ){
+										String username = getParam("username", param);
+										String password = getParam("password", param);
 			                        	if(username.length() > 0 && password.length() > 0){
 											saveAdminList.setString(username, password);
 											saveAdminList.removeKey("admin");
@@ -262,7 +269,7 @@ public class WebServer extends Thread {
 										readFileAsBinary("./milkAdmin/html/register.html");
 									}
 								}else{
-			                        if ( g.contains("/start") ){
+			                        if ( url.contains("/start") ){
 			                        	json = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html><head><meta HTTP-EQUIV=\"REFRESH\" content=\"20; url=/\">"+readFileAsString("./milkAdmin/html/wait.html");
 			                            print(json, "text/html");
 			                            try {
@@ -272,8 +279,8 @@ public class WebServer extends Thread {
 										}
 										milkAdminRTKInstance.api.executeCommand(RTKInterface.CommandType.UNHOLD_SERVER);
 			                        }
-			                        else if(g.startsWith("/restore")){
-			                        	String id = getParam("id", g);
+			                        else if(url.startsWith("/restore")){
+			                        	String id = getParam("id", param);
 			                        	if(id.length() > 0){
 			                        		new File("backups").mkdir();
 			                        		new File("backups/"+id).mkdir();
@@ -295,8 +302,8 @@ public class WebServer extends Thread {
 			                        		}
 			                        	}
 			                        }
-			                        else if( g.startsWith("/images/") || g.startsWith("/js/") || g.startsWith("/css/")){
-										readFileAsBinary("./milkAdmin/html" + g);
+			                        else if( url.startsWith("/images/") || url.startsWith("/js/") || url.startsWith("/css/")){
+										readFileAsBinary("./milkAdmin/html" + url);
 									}
 			                        else{
 			                         	readFileAsBinary("./milkAdmin/html/startServer.html");
