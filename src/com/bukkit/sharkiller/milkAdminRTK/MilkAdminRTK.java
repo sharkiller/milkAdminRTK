@@ -19,7 +19,8 @@ public class MilkAdminRTK extends Module implements RTKListener{
 	private ModuleLoader moduleLoader;
 	private ClassLoader cLoader;
 	RTKInterface api = null;
-	Configuration Settings = new Configuration(new File("milkAdmin/settings.yml"));
+	String PluginDir = "plugins/milkAdmin";
+	Configuration Settings = new Configuration(new File(PluginDir+"/settings.yml"));
 	private WebServer server = null;
 	public MilkAdminRTK(ModuleMetadata meta, ModuleLoader moduleLoader, ClassLoader cLoader){
 		super(meta,moduleLoader,cLoader,ToolkitEvent.ON_SERVER_HOLD,ToolkitEvent.ON_SERVER_RESTART);
@@ -44,7 +45,7 @@ public class MilkAdminRTK extends Module implements RTKListener{
 	}
 
 	public void onRTKStringReceived(String s){
-		System.out.println("[milkAdminRTK] From wrapper: "+s);
+		System.out.println("[milkAdminRTK] From RTK: "+s);
 	}
 	
 	protected void onDisable(){

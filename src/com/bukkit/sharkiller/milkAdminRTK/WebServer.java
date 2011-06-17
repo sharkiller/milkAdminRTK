@@ -176,12 +176,13 @@ public class WebServer extends Thread {
 	boolean Debug;
 	int Port;
 	String levelname;
-	Configuration Settings = new Configuration(new File("milkAdmin/settings.yml"));
+	String PluginDir = "plugins/milkAdmin/";
+	Configuration Settings = new Configuration(new File(PluginDir+"settings.yml"));
 	PropertiesFile BukkitProperties = new PropertiesFile("server.properties");
-	NoSavePropertiesFile adminList = new NoSavePropertiesFile("milkAdmin/admins.ini");
-	PropertiesFile saveAdminList = new PropertiesFile("milkAdmin/admins.ini");
-	NoSavePropertiesFile noSaveLoggedIn = new NoSavePropertiesFile("milkAdmin/loggedin.ini");
-	PropertiesFile LoggedIn = new PropertiesFile("milkAdmin/loggedin.ini");
+	NoSavePropertiesFile adminList = new NoSavePropertiesFile(PluginDir+"admins.ini");
+	PropertiesFile saveAdminList = new PropertiesFile(PluginDir+"admins.ini");
+	NoSavePropertiesFile noSaveLoggedIn = new NoSavePropertiesFile(PluginDir+"loggedin.ini");
+	PropertiesFile LoggedIn = new PropertiesFile(PluginDir+"loggedin.ini");
 
 	public void load_settings(){
 		Settings.load();
@@ -201,7 +202,7 @@ public class WebServer extends Thread {
 	        } else {
 	            BufferedReader in = new BufferedReader(new InputStreamReader(WebServerSocket.getInputStream()));
 	            try{
-	                String l, g, url="", param="", json;
+	                String l, g, url="", param="", json, htmlDir = "./plugins/milkAdmin/html";
 	                while ( (l = in.readLine()).length() > 0 ){
 	                    if ( l.startsWith("GET") ){
 	                        g = (l.split(" "))[1];
@@ -235,13 +236,13 @@ public class WebServer extends Thread {
 							}
 	                        else if (!noSaveLoggedIn.containsKey(WebServerSocket.getInetAddress().getCanonicalHostName()) || !noSaveLoggedIn.containsKey(WebServerSocket.getInetAddress().getHostAddress())){
 	                        	if( url.equals("/")){
-									readFileAsBinary("./milkAdmin/html/login.html");
+									readFileAsBinary(htmlDir+"/login.html");
 								}
 								else if( url.equals("/invalidlogin.html")){
-									readFileAsBinary("./milkAdmin/html/invalidlogin.html");
+									readFileAsBinary(htmlDir+"/invalidlogin.html");
 								}
 								else if( url.startsWith("/images/") || url.startsWith("/js/") || url.startsWith("/css/")){
-									readFileAsBinary("./milkAdmin/html" + url);
+									readFileAsBinary(htmlDir+"" + url);
 								}
 	                            //OTHERWISE LOAD PAGES
 	                            else{
@@ -251,10 +252,10 @@ public class WebServer extends Thread {
 	                        }else{
 	                        	if(adminList.containsKey("admin")){
 	                        		if( url.equals("/register.html")){
-										readFileAsBinary("./milkAdmin/html/register.html");
+										readFileAsBinary(htmlDir+"/register.html");
 									}
 	                        		else if( url.startsWith("/images/") || url.startsWith("/js/") || url.startsWith("/css/")){
-										readFileAsBinary("./milkAdmin/html" + url);
+										readFileAsBinary(htmlDir + url);
 									}
 									else if ( url.startsWith("/server/account_create") ){
 										String username = getParam("username", param);
@@ -266,11 +267,11 @@ public class WebServer extends Thread {
 										json = "<html><head><meta HTTP-EQUIV=\"REFRESH\" content=\"0; url=/\"></head></html>";
 										print(json, "text/html");
 									}else{
-										readFileAsBinary("./milkAdmin/html/register.html");
+										readFileAsBinary(htmlDir+"/register.html");
 									}
 								}else{
 			                        if ( url.contains("/start") ){
-			                        	json = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html><head><meta HTTP-EQUIV=\"REFRESH\" content=\"20; url=/\">"+readFileAsString("./milkAdmin/html/wait.html");
+			                        	json = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html><head><meta HTTP-EQUIV=\"REFRESH\" content=\"20; url=/\">"+readFileAsString(htmlDir+"/wait.html");
 			                            print(json, "text/html");
 			                            try {
 											Thread.sleep(1000);
@@ -303,10 +304,10 @@ public class WebServer extends Thread {
 			                        	}
 			                        }
 			                        else if( url.startsWith("/images/") || url.startsWith("/js/") || url.startsWith("/css/")){
-										readFileAsBinary("./milkAdmin/html" + url);
+										readFileAsBinary(htmlDir + url);
 									}
 			                        else{
-			                         	readFileAsBinary("./milkAdmin/html/startServer.html");
+			                         	readFileAsBinary(htmlDir+"/startServer.html");
 			                        }
 			                    }
 	                        }
