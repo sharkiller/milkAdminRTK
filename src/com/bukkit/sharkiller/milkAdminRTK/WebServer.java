@@ -8,10 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
 
-import com.bukkit.sharkiller.milkAdminRTK.NoSavePropertiesFile;
-import com.bukkit.sharkiller.milkAdminRTK.PropertiesFile;
 import com.bukkit.sharkiller.milkAdminRTK.Config.*;
-import com.bukkit.sharkiller.milkAdminRTK.RTKToolkit.*;
+import com.bukkit.sharkiller.milkAdminRTK.RTK.*;
 
 public class WebServer extends Thread {
     int WebServerMode;
@@ -175,6 +173,7 @@ public class WebServer extends Thread {
 
 	boolean Debug;
 	int Port;
+	static InetAddress Ip = null;
 	String levelname;
 	String PluginDir = "plugins/milkAdmin/";
 	Configuration Settings = new Configuration(new File(PluginDir+"settings.yml"));
@@ -187,6 +186,13 @@ public class WebServer extends Thread {
 	public void load_settings(){
 		Settings.load();
 		Debug = Settings.getBoolean("Settings.Debug", false);
+		String ipaux = Settings.getString("Settings.Ip", null);
+		if(ipaux != null && !ipaux.equals("")){
+			try {
+				Ip = InetAddress.getByName(ipaux);
+				debug("Ip: "+ipaux+" - Ip: "+Ip);
+			} catch (UnknownHostException e) {}
+		}
 		Port = Settings.getInt("Settings.Port", 64712);
 		NoSavePropertiesFile serverProperties = new NoSavePropertiesFile("server.properties");
 		levelname = serverProperties.getString("level-name");
@@ -196,8 +202,14 @@ public class WebServer extends Thread {
 		load_settings();
 		try{
 	        if ( WebServerMode == 0 ){
-	            rootSocket = new ServerSocket(Port);
-	            for (;;)
+	        	if(Ip == null){
+					rootSocket = new ServerSocket(Port);
+					System.out.println("[milkAdminRTK] WebServer listening on port "+Port);
+				}else{
+					rootSocket = new ServerSocket(Port, 50, Ip);
+					System.out.println("[milkAdminRTK] WebServer listening on "+Ip+":"+Port);
+				}
+				while(!rootSocket.isClosed())
 	                new WebServer(milkAdminRTKInstance, rootSocket.accept());
 	        } else {
 	            BufferedReader in = new BufferedReader(new InputStreamReader(WebServerSocket.getInputStream()));
@@ -278,7 +290,7 @@ public class WebServer extends Thread {
 										} catch (InterruptedException e) {
 											debug("[milkAdminRTK] ERROR in Start: " + e.getMessage());
 										}
-										milkAdminRTKInstance.api.executeCommand(RTKInterface.CommandType.UNHOLD_SERVER);
+										milkAdminRTKInstance.api.executeCommand(RTKInterface.CommandType.UNHOLD_SERVER,null);
 			                        }
 			                        else if(url.startsWith("/restore")){
 			                        	String id = getParam("id", param);
@@ -296,7 +308,7 @@ public class WebServer extends Thread {
 												} catch (InterruptedException e) {
 													debug("[milkAdminRTK] ERROR in Restore: " + e.getMessage());
 												}
-												milkAdminRTKInstance.api.executeCommand(RTKInterface.CommandType.UNHOLD_SERVER);
+												milkAdminRTKInstance.api.executeCommand(RTKInterface.CommandType.UNHOLD_SERVER,null);
 			                        		}catch(IOException e){
 			                        			debug("[milkAdminRTK] ERROR in Restore: " + e.getMessage());
 			                        			return;
@@ -323,6 +335,7 @@ public class WebServer extends Thread {
 		}
 	}
 	public void stopServer()throws IOException{
-		rootSocket.close();
+		if(rootSocket != null)
+			rootSocket.close();
 	}
 }
