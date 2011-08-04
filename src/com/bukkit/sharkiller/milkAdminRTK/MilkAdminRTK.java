@@ -58,7 +58,7 @@ public class MilkAdminRTK extends Module implements RTKListener{
 	protected void onEnable(){
 		LOG.info("[milkAdminRTK] Module enabled!");
         api.registerRTKListener(this);
-		server = new WebServer(this);
+		server = new WebServer(this, LOG);
 	}
 
 	public void onRTKStringReceived(String s){
