@@ -1,0 +1,4 @@
+name:milkAdminRTK
+main:com.bukkit.sharkiller.milkAdminRTK.MilkAdminRTK
+version:1.8-03.19-dev
+author:Sharkiller
