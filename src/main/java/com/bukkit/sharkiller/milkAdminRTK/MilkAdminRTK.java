@@ -1,13 +1,11 @@
 package com.bukkit.sharkiller.milkAdminRTK;
 
-//these must be imported
-
-import com.bukkit.sharkiller.milkAdminRTK.Config.*;
-import com.bukkit.sharkiller.milkAdminRTK.RTK.*;
 import com.drdanick.McRKit.module.Module;
 import com.drdanick.McRKit.module.ModuleLoader;
 import com.drdanick.McRKit.module.ModuleMetadata;
 import com.drdanick.McRKit.ToolkitEvent;
+import com.bukkit.sharkiller.milkAdminRTK.Config.Configuration;
+import com.bukkit.sharkiller.milkAdminRTK.RTK.*;
 
 import java.io.File;
 import java.io.IOException;

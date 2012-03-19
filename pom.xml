@@ -29,6 +29,13 @@
         <type>jar</type>
         <scope>provided</scope>
     </dependency>
+    <dependency>
+	    <groupId>com.drdanick</groupId>
+	    <artifactId>McRKit</artifactId>
+	    <version>1.0.0</version>
+	    <scope>system</scope>
+	    <systemPath>${basedir}/lib/Minecraft_RKit.jar</systemPath>
+	</dependency>
   </dependencies>
 
   <build>

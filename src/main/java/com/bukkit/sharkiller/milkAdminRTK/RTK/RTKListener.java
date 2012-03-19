@@ -1,6 +1,3 @@
-//RTK UDP API
-//(C) Nick Stones-Havas 2011
-//Revision date: February 1st, 2011
 package com.bukkit.sharkiller.milkAdminRTK.RTK;
 /**
  * Abstract interface that defines an object capable of processing inbound API events.
