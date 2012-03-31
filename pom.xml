@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.bukkit.sharkiller</groupId>
   <artifactId>milkAdminRTK</artifactId>
-  <version>1.8-03.19-dev</version>
+  <version>1.8</version>
   <name>milkAdminRTK</name>
   <url>http://www.sectorgamer.com</url>
 
@@ -12,12 +12,16 @@
   
   <repositories>
     <repository>
+      <id>spout-repo</id>
+      <url>http://nexus.spout.org/content/groups/public</url>
+    </repository>
+    <repository>
       <id>bukkit-repo</id>
       <url>http://repo.bukkit.org/content/groups/public</url>
     </repository>
     <repository>
-      <id>spout-repo</id>
-      <url>http://nexus.spout.org/content/groups/public</url>
+      <id>drdanick-repo</id>
+      <url>http://dev.drdanick.com/repo/content/groups/public/</url>
     </repository>
   </repositories>
 
@@ -30,12 +34,10 @@
         <scope>provided</scope>
     </dependency>
     <dependency>
-	    <groupId>com.drdanick</groupId>
-	    <artifactId>McRKit</artifactId>
-	    <version>1.0.0</version>
-	    <scope>system</scope>
-	    <systemPath>${basedir}/lib/Minecraft_RKit.jar</systemPath>
-	</dependency>
+        <groupId>com.drdanick.McRKit</groupId>
+        <artifactId>McRKitLauncher</artifactId>
+        <version>R10A12</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -45,7 +47,7 @@
         <directory>${basedir}/src/main/resources/</directory>
         <filtering>true</filtering>
         <includes>
-          <include>modules.txt</include>
+          <include>module.txt</include>
         </includes>
       </resource>
     </resources>
@@ -61,4 +63,13 @@
       </plugin>
     </plugins>
   </build>
+  <scm>
+  	<url>https://github.com/sharkiller/milkAdminRTK</url>
+  	<developerConnection>scm:git:git@github.com:sharkiller/milkAdminRTK.git</developerConnection>
+  	<connection>scm:git:git://github.com/sharkiller/milkAdminRTK.git</connection>
+  </scm>
+  <ciManagement>
+  	<system>jenkins</system>
+  	<url>http://mc.sectorgamer.com:8080/</url>
+  </ciManagement>
 </project>
