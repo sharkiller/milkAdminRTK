@@ -381,7 +381,10 @@ public class WebServer extends Thread {
 							}
 							String HostAddress = WebServerSocket.getInetAddress().getHostAddress();
 							debug("[milkAdmin] "+HostAddress+" - "+url);
-	                        if ( url.startsWith("/server/login") ){
+							if ( url.contains("./")  ){
+								httperror("403 Access Denied");
+							}
+							else if ( url.startsWith("/server/login") ){
 	                        	String username = getParam("username", param);
 								String password = getParam("password", param);
 	                        	if(username.length() > 0 && password.length() > 0){
